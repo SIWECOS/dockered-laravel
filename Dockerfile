@@ -33,7 +33,18 @@ RUN usermod -u 1000 www-data && groupmod -g 1000 www-data \
     && sed -i -e "s/html/html\/public/g" /etc/apache2/sites-enabled/000-default.conf \
     && a2enmod rewrite
 
+# Copy configuration files
+COPY php.ini /usr/local/etc/php/
+COPY supervisord.conf /etc/supervisor/supervisord.conf
+
+# Send scheduled output to docker logs
+RUN ln -sf /proc/1/fd/1 ./scheduleOutputToStdout
+
 # Copy source files and run composer
 WORKDIR /var/www/html
+
+CMD php artisan key:generate --force \
+    && php artisan optimize \
+    && supervisord --nodaemon --configuration /etc/supervisor/supervisord.conf
 
 EXPOSE 80
