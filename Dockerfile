@@ -40,7 +40,9 @@ COPY supervisord.conf /etc/supervisor/supervisord.conf
 # Send scheduled output to docker logs
 RUN ln -sf /proc/1/fd/1 ./scheduleOutputToStdout
 
-# Copy source files and run composer
+# Speedup composer
+RUN composer global require hirak/prestissimo
+
 WORKDIR /var/www/html
 
 CMD php artisan key:generate --force \
