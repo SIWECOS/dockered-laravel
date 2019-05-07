@@ -1,0 +1,26 @@
+language: generic
+
+dist: trusty
+
+script:
+  - docker build -t dockered-laravel .
+
+before_deploy:
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+
+deploy:
+  - provider: script
+    skip_cleanup: true
+    on:
+      all_branches: true
+      condition: NOT branch = master
+    script: >-
+      docker tag dockered-laravel siwecos/dockered-laravel:$TRAVIS_BRANCH &&
+      docker push siwecos/dockered-laravel:$TRAVIS_BRANCH
+  - provider: script
+    skip_cleanup: true
+    on:
+      branch: master
+    script: >-
+      docker tag dockered-laravel siwecos/dockered-laravel:latest &&
+      docker push siwecos/dockered-laravel:latest
