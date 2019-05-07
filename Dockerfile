@@ -14,12 +14,13 @@ ENV LC_ALL de_DE.UTF-8
 
 # Install all dependencies and generate the locales
 RUN apt-get update -y \
-    && apt-get install -y redis-server openssl vim zip unzip git libpng-dev zlib1g-dev python3 python3-pip libzip-dev locales \
+    && apt-get install -y redis-server libicu-dev openssl vim zip unzip git libpng-dev zlib1g-dev python3 python3-pip libzip-dev locales \
     && sed -i 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen \
     && sed -i 's/# de_DE.UTF-8 UTF-8/de_DE.UTF-8 UTF-8/' /etc/locale.gen \
     && locale-gen \
     && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
-    && docker-php-ext-install mysqli pdo_mysql pdo mbstring gd zip \
+    && docker-php-ext-configure intl \
+    && docker-php-ext-install intl mysqli pdo_mysql pdo mbstring gd zip \
     && pip3 install supervisor \
     && pecl install -o -f redis \
     && docker-php-ext-enable redis \
