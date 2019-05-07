@@ -1,4 +1,4 @@
-FROM php:7.2-apache
+FROM php:7.3-apache
 
 LABEL maintainer="Sascha Brendel <mail@lednerb.eu>"
 
@@ -14,7 +14,7 @@ ENV LC_ALL de_DE.UTF-8
 
 # Install all dependencies and generate the locales
 RUN apt-get update -y \
-    && apt-get install -y redis-server openssl vim zip unzip git libpng-dev zlib1g-dev python3 python3-pip locales \
+    && apt-get install -y redis-server openssl vim zip unzip git libpng-dev zlib1g-dev python3 python3-pip libzip-dev locales \
     && sed -i 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen \
     && sed -i 's/# de_DE.UTF-8 UTF-8/de_DE.UTF-8 UTF-8/' /etc/locale.gen \
     && locale-gen \
