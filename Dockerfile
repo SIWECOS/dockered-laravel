@@ -6,6 +6,7 @@ LABEL maintainer="Sascha Brendel <mail@lednerb.eu>"
 ENV ARTISAN_GENERATE_KEY true
 ENV ARTISAN_CACHE true
 ENV ARTISAN_MIGRATE false
+ENV USE_SCHEDULER false
 
 ENV LANG de_DE.UTF-8
 ENV LANGUAGE de_DE:de
@@ -39,6 +40,7 @@ RUN usermod -u 1000 www-data && groupmod -g 1000 www-data \
 COPY php.ini /usr/local/etc/php/
 COPY supervisord.conf /etc/supervisor/supervisord.conf
 COPY startup.sh /
+COPY supervisord-with-scheduler.conf /
 
 # Speedup composer
 RUN composer global require hirak/prestissimo
