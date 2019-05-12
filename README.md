@@ -21,5 +21,6 @@ The following options can be set via the project's `Dockerfile`:
 | `ARTISAN_GENERATE_KEY` | `true`        | Generate a fresh laravel key on container startup      |
 | `ARTISAN_CACHE`        | `true`        | Cache laravel config and routes for better performance |
 | `ARTISAN_MIGRATE`      | `false`       | Run database migrations on container startup           |
+| `USE_SCHEDULER`        | `false`       | Use the laravel scheduler                              |
 
 For further details have a look at the `startup.sh` script.
