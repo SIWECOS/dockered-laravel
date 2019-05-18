@@ -7,6 +7,7 @@ fi
 if [ "$ARTISAN_CACHE" = true ]; then
     php artisan config:cache
     php artisan route:cache
+    php artisan event:cache
 fi
 
 if [ "$ARTISAN_MIGRATE" = true ]; then
