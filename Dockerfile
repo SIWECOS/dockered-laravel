@@ -14,7 +14,7 @@ ENV LC_ALL de_DE.UTF-8
 
 # Install all dependencies and generate the locales
 RUN apt-get update -y \
-    && apt-get install -y redis-server libicu-dev openssl vim zip unzip git libpng-dev zlib1g-dev python3 python3-pip libzip-dev locales \
+    && apt-get install -y redis-server libicu-dev openssl vim zip unzip git libpng-dev zlib1g-dev python3 python3-pip libzip-dev locales libapache2-mod-rpaf \
     && sed -i 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen \
     && sed -i 's/# de_DE.UTF-8 UTF-8/de_DE.UTF-8 UTF-8/' /etc/locale.gen \
     && locale-gen \
@@ -33,6 +33,7 @@ RUN apt-get update -y \
 # Enable apache module rewrite
 RUN usermod -u 1000 www-data && groupmod -g 1000 www-data \
     && sed -i -e "s/html/html\/public/g" /etc/apache2/sites-enabled/000-default.conf \
+    && sed -i "s/127.0.0.1/172.16.0.0\/12/g" /etc/apache2/mods-enabled/rpaf.conf \
     && a2enmod rewrite
 
 # Copy configuration files
