@@ -15,7 +15,7 @@ ENV LC_ALL de_DE.UTF-8
 
 # Install all dependencies and generate the locales
 RUN apt-get update -y \
-    && apt-get install -y redis-server libicu-dev openssl vim zip unzip git libpng-dev zlib1g-dev python3 python3-pip locales libapache2-mod-rpaf \
+    && apt-get install -y redis-server libicu-dev openssl vim zip unzip git libpng-dev zlib1g-dev python3 python3-pip locales \
     && sed -i 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen \
     && sed -i 's/# de_DE.UTF-8 UTF-8/de_DE.UTF-8 UTF-8/' /etc/locale.gen \
     && locale-gen \
@@ -34,17 +34,16 @@ RUN apt-get update -y \
 # Enable apache module rewrite
 RUN usermod -u 1000 www-data && groupmod -g 1000 www-data \
     && sed -i -e "s/html/html\/public/g" /etc/apache2/sites-enabled/000-default.conf \
-    && sed -i "s/127.0.0.1/172.16.0.0\/12/g" /etc/apache2/mods-enabled/rpaf.conf \
-    && a2enmod rewrite
+    && echo "RemoteIPHeader X-Forwarded-For" >> /etc/apache2/apache2.conf \
+    && sed -i "s/LogFormat \"%h/LogFormat \"%a/g" /etc/apache2/apache2.conf \
+    && a2enmod rewrite \
+    && a2enmod remoteip
 
 # Copy configuration files
 COPY php.ini /usr/local/etc/php/
 COPY supervisord.conf /etc/supervisor/supervisord.conf
 COPY startup.sh /
 COPY supervisord-with-scheduler.conf /
-
-# Speedup composer
-RUN composer global require hirak/prestissimo
 
 WORKDIR /var/www/html
 
